@@ -1,15 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
+import { addFavorite, getAllFavorites } from "../utils/utility";
+import nutritionImg from "../assets/nutrition.png";
 
 const CoffeeDetails = () => {
   const data = useLoaderData();
   const { id } = useParams();
-  const [coffee, setCoffee] = useState([])
+  const [coffee, setCoffee] = useState({});
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  useEffect(()=>{
-    const singleData = data.find(coffee=>coffee.id === id)
-    setCoffee(singleData)
-  }, [data, id])
+  useEffect(() => {
+    const singleData = data.find((coffee) => coffee.id == id);
+    setCoffee(singleData);
+    const favorites = getAllFavorites();
+    const isExist = favorites.find((item) => item.id == singleData.id);
+    if (isExist) {
+      setIsFavorite(true);
+    }
+  }, [data, id]);
+
+  const {
+    name,
+    image,
+    ingredients,
+    nutrition_info,
+    description,
+    making_process,
+    rating,
+    popularity,
+  } = coffee;
+
+  const handleFavorite = (coffee) => {
+    addFavorite(coffee);
+    setIsFavorite(true);
+  };
 
   return (
     <div className="my-12">
